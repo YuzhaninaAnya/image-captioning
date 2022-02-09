@@ -14,7 +14,7 @@ run in terminal: `python -m img_caption`
 # Config 
 The user interface consists of file:
 
-* [config.yaml](https://github.com/YuzhaninaAnya/image-captioning/blob/main/config.yaml) - general configuration with data and model parameters
+* [config.yaml](https://github.com/YuzhaninaAnya/image-captioning/blob/main/img_caption/config.yaml) - general configuration with data and model parameters
 
 Default **config.yaml**: 
 ````
