@@ -1,0 +1,20 @@
+data:
+  path_to_data_folder: "data"
+  caption_file_name: "captions.txt"
+  images_folder_name: "Images"
+  output_folder_name: "output"
+  logging_file_name: "logging.txt"
+  model_file_name: "model.pt"
+
+batch_size: 32
+num_worker: 1
+gensim_model_name: "glove-wiki-gigaword-200"
+
+model:
+  embedding_dimension: 200
+  decoder_hidden_dimension: 300
+  learning_rate: 0.0001
+  momentum: 0.9
+  n_epochs: 50
+  clip: 5
+  fine_tune_encoder: false
