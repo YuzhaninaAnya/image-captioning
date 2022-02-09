@@ -6,7 +6,7 @@
  Decoder is the LSTM with the Bahdanau Attention. 
  
 # Dataset
-The dataset is available at [kaggle](https://www.kaggle.com/adityajn105/flickr8k) and contains 8,000 images that are each paired with five different captions
+The dataset is available at [kaggle](https://www.kaggle.com/adityajn105/flickr8k) and contains 8,000 images that are each paired with five different captions.
 
 # Usage
 run in terminal: `python -m img_caption`
