@@ -1,0 +1,85 @@
+2022-02-13 09:48:22,433 - INFO - Loading data
+2022-02-13 09:48:24,218 - INFO - Train dataset size: 32364
+2022-02-13 09:48:24,220 - INFO - Test dataset size: 8091
+2022-02-13 09:48:54,170 - INFO - Download embeddings: glove-wiki-gigaword-200
+2022-02-13 09:51:51,807 - INFO - Embedding dimension: 200
+2022-02-13 09:51:51,808 - INFO - Decoder hidden dimension: 300
+2022-02-13 09:51:51,810 - INFO - Batch size: 32
+2022-02-13 09:51:51,817 - INFO - Learning rate: 0.0003
+2022-02-13 09:51:51,819 - INFO - Start train
+2022-02-13 10:02:32,265 - INFO - Epoch: 01 | Time: 8m 32s
+2022-02-13 10:02:32,266 - INFO - 	Train Loss: 4.473 | Train PPL:  87.605
+2022-02-13 10:02:32,269 - INFO - 	 Val. Loss: 4.452 |  Val. PPL:  85.778
+2022-02-13 10:10:30,461 - INFO - Epoch: 02 | Time: 7m 57s
+2022-02-13 10:10:30,467 - INFO - 	Train Loss: 3.955 | Train PPL:  52.211
+2022-02-13 10:10:30,470 - INFO - 	 Val. Loss: 4.371 |  Val. PPL:  79.122
+2022-02-13 10:18:29,778 - INFO - Epoch: 03 | Time: 7m 58s
+2022-02-13 10:18:29,782 - INFO - 	Train Loss: 3.758 | Train PPL:  42.876
+2022-02-13 10:18:29,783 - INFO - 	 Val. Loss: 4.331 |  Val. PPL:  76.012
+2022-02-13 10:26:28,790 - INFO - Epoch: 04 | Time: 7m 58s
+2022-02-13 10:26:28,795 - INFO - 	Train Loss: 3.625 | Train PPL:  37.522
+2022-02-13 10:26:28,798 - INFO - 	 Val. Loss: 4.285 |  Val. PPL:  72.630
+2022-02-13 10:34:27,440 - INFO - Epoch: 05 | Time: 7m 57s
+2022-02-13 10:34:27,445 - INFO - 	Train Loss: 3.537 | Train PPL:  34.361
+2022-02-13 10:34:27,448 - INFO - 	 Val. Loss: 4.274 |  Val. PPL:  71.792
+2022-02-13 10:42:27,499 - INFO - Epoch: 06 | Time: 7m 59s
+2022-02-13 10:42:27,508 - INFO - 	Train Loss: 3.460 | Train PPL:  31.810
+2022-02-13 10:42:27,509 - INFO - 	 Val. Loss: 4.252 |  Val. PPL:  70.247
+2022-02-13 10:50:26,627 - INFO - Epoch: 07 | Time: 7m 58s
+2022-02-13 10:50:26,628 - INFO - 	Train Loss: 3.384 | Train PPL:  29.485
+2022-02-13 10:50:26,630 - INFO - 	 Val. Loss: 4.293 |  Val. PPL:  73.196
+2022-02-13 10:58:31,168 - INFO - Epoch: 08 | Time: 8m 3s
+2022-02-13 10:58:31,173 - INFO - 	Train Loss: 3.326 | Train PPL:  27.823
+2022-02-13 10:58:31,176 - INFO - 	 Val. Loss: 4.219 |  Val. PPL:  67.997
+2022-02-13 11:06:29,231 - INFO - Epoch: 09 | Time: 7m 57s
+2022-02-13 11:06:29,237 - INFO - 	Train Loss: 3.273 | Train PPL:  26.381
+2022-02-13 11:06:29,240 - INFO - 	 Val. Loss: 4.251 |  Val. PPL:  70.162
+2022-02-13 11:14:29,127 - INFO - Epoch: 10 | Time: 7m 59s
+2022-02-13 11:14:29,132 - INFO - 	Train Loss: 3.226 | Train PPL:  25.177
+2022-02-13 11:14:29,135 - INFO - 	 Val. Loss: 4.167 |  Val. PPL:  64.507
+2022-02-13 11:22:29,625 - INFO - Epoch: 11 | Time: 8m 0s
+2022-02-13 11:22:29,628 - INFO - 	Train Loss: 3.190 | Train PPL:  24.286
+2022-02-13 11:22:29,629 - INFO - 	 Val. Loss: 4.240 |  Val. PPL:  69.386
+2022-02-13 11:30:30,648 - INFO - Epoch: 12 | Time: 8m 0s
+2022-02-13 11:30:30,653 - INFO - 	Train Loss: 3.151 | Train PPL:  23.352
+2022-02-13 11:30:30,657 - INFO - 	 Val. Loss: 4.187 |  Val. PPL:  65.805
+2022-02-13 11:38:36,158 - INFO - Epoch: 13 | Time: 8m 5s
+2022-02-13 11:38:36,163 - INFO - 	Train Loss: 3.099 | Train PPL:  22.181
+2022-02-13 11:38:36,163 - INFO - 	 Val. Loss: 4.226 |  Val. PPL:  68.476
+2022-02-13 11:46:34,893 - INFO - Epoch: 14 | Time: 7m 58s
+2022-02-13 11:46:34,898 - INFO - 	Train Loss: 3.078 | Train PPL:  21.711
+2022-02-13 11:46:34,899 - INFO - 	 Val. Loss: 4.200 |  Val. PPL:  66.673
+2022-02-13 11:54:33,261 - INFO - Epoch: 15 | Time: 7m 57s
+2022-02-13 11:54:33,263 - INFO - 	Train Loss: 3.056 | Train PPL:  21.238
+2022-02-13 11:54:33,264 - INFO - 	 Val. Loss: 4.151 |  Val. PPL:  63.507
+2022-02-13 12:02:33,406 - INFO - Epoch: 16 | Time: 7m 59s
+2022-02-13 12:02:33,409 - INFO - 	Train Loss: 3.021 | Train PPL:  20.515
+2022-02-13 12:02:33,410 - INFO - 	 Val. Loss: 4.180 |  Val. PPL:  65.368
+2022-02-13 12:10:30,311 - INFO - Epoch: 17 | Time: 7m 56s
+2022-02-13 12:10:30,315 - INFO - 	Train Loss: 2.990 | Train PPL:  19.883
+2022-02-13 12:10:30,316 - INFO - 	 Val. Loss: 4.174 |  Val. PPL:  65.006
+2022-02-13 12:18:29,614 - INFO - Epoch: 18 | Time: 7m 58s
+2022-02-13 12:18:29,619 - INFO - 	Train Loss: 2.967 | Train PPL:  19.435
+2022-02-13 12:18:29,626 - INFO - 	 Val. Loss: 4.179 |  Val. PPL:  65.277
+2022-02-13 12:26:34,390 - INFO - Epoch: 19 | Time: 8m 4s
+2022-02-13 12:26:34,396 - INFO - 	Train Loss: 2.939 | Train PPL:  18.900
+2022-02-13 12:26:34,399 - INFO - 	 Val. Loss: 4.204 |  Val. PPL:  66.978
+2022-02-13 12:34:35,204 - INFO - Epoch: 20 | Time: 8m 0s
+2022-02-13 12:34:35,209 - INFO - 	Train Loss: 2.916 | Train PPL:  18.470
+2022-02-13 12:34:35,211 - INFO - 	 Val. Loss: 4.158 |  Val. PPL:  63.973
+2022-02-13 12:42:32,665 - INFO - Epoch: 21 | Time: 7m 57s
+2022-02-13 12:42:32,679 - INFO - 	Train Loss: 2.883 | Train PPL:  17.860
+2022-02-13 12:42:32,680 - INFO - 	 Val. Loss: 4.189 |  Val. PPL:  65.941
+2022-02-13 12:50:29,718 - INFO - Epoch: 22 | Time: 7m 56s
+2022-02-13 12:50:29,731 - INFO - 	Train Loss: 2.866 | Train PPL:  17.567
+2022-02-13 12:50:29,732 - INFO - 	 Val. Loss: 4.166 |  Val. PPL:  64.488
+2022-02-13 12:58:25,805 - INFO - Epoch: 23 | Time: 7m 55s
+2022-02-13 12:58:25,807 - INFO - 	Train Loss: 2.854 | Train PPL:  17.352
+2022-02-13 12:58:25,808 - INFO - 	 Val. Loss: 4.186 |  Val. PPL:  65.774
+2022-02-13 13:06:24,249 - INFO - Epoch: 24 | Time: 7m 58s
+2022-02-13 13:06:24,255 - INFO - 	Train Loss: 2.831 | Train PPL:  16.970
+2022-02-13 13:06:24,257 - INFO - 	 Val. Loss: 4.209 |  Val. PPL:  67.271
+2022-02-13 13:14:23,488 - INFO - Epoch: 25 | Time: 7m 58s
+2022-02-13 13:14:23,492 - INFO - 	Train Loss: 2.812 | Train PPL:  16.640
+2022-02-13 13:14:23,493 - INFO - 	 Val. Loss: 4.177 |  Val. PPL:  65.190
+2022-02-13 13:14:23,509 - INFO - End
