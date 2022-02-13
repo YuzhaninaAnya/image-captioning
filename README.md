@@ -1,8 +1,8 @@
 # Image captioning
- End-to-end image captioning with **EfficientNet-b3 + LSTM with Attention**
+ End-to-end image captioning with **ResNet50 + LSTM with Attention**
  
  Model is seq2seq model. 
- In the encoder pretrained EfficientNet-b3 model is used to extract the features. 
+ In the encoder pretrained ResNet50 model is used to extract the features. 
  Decoder is the LSTM with the Bahdanau Attention. 
  
 # Dataset
