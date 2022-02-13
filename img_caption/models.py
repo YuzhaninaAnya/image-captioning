@@ -175,7 +175,7 @@ class DecoderWithAttention(nn.Module):
 
         input = captions[:, 0]  # (batch_size)
 
-        for t in range(captions_len):
+        for t in range(1, captions_len):
             input = input.unsqueeze(0)  # (1, batch_size)
             embeddings = self.dropout(self.embedding(input))  # (1, batch_size, embed_dim)
 
@@ -196,6 +196,51 @@ class DecoderWithAttention(nn.Module):
 
         return predictions
 
+    def generate_caption(self, encoder_output, max_len=20):
+        """
+        Given the image features generate the captions
+
+        :param encoder_output: encoded images (1, image_size, image_size, n_out_channels)
+        :param max_len: max length of generated caption
+        :return: generated caption
+        """
+
+        idx2word = {idx: word for word, idx in self.word2idx.items()}
+
+        # Initialize LSTM state
+        h, c = self.init_hidden_state(encoder_output)  # (batch_size, decoder_dim)
+
+        # (sequence_length, batch_size, vocab_size)
+        predictions = []
+
+        input = torch.tensor([self.word2idx["<start>"]]).to(device)
+
+        for t in range(max_len):
+            input = input.unsqueeze(0)  # (1, batch_size)
+
+            embeddings = self.dropout(self.embedding(input))  # (1, batch_size, embed_dim)
+
+            attn = self.attention(h, encoder_output)
+            weigted_sum = torch.sum(attn * encoder_output.permute((1, 0, 2)), dim=0,
+                                    keepdim=True)  # (1, batch_size, encoder_dim)
+            embeddings = torch.cat((embeddings, weigted_sum), dim=2).squeeze(
+                0)  # (batch_size, n_out_channels + emb_dim)
+
+            h, c = self.rnn(embeddings, (h, c))  # (batch_size, decoder_dim)
+            prediction = self.fc(h)  # (batch_size, vocab_size)
+
+            predicted_word_idx = prediction.argmax(-1)
+
+            predictions.append(predicted_word_idx.item())
+
+            if idx2word[predicted_word_idx.item()] == "<end>":
+                break
+
+            input = predicted_word_idx
+
+        # covert the vocab idx to words and return sentence
+        return [idx2word[idx] for idx in predictions]
+
 
 class Seq2Seq(nn.Module):
     def __init__(self, encoder, decoder):
@@ -211,7 +256,7 @@ class Seq2Seq(nn.Module):
         :param image: (batch_size, n_channels, image_size, image_size)
         :param captions: (batch_size, sequence_length)
         :param teacher_forcing_ratio: probability of using the real target outputs as each next input
-        :return:
+        :return: scores for vocabulary (sequence_length, batch_size, vocab_size)
         """
 
         encoder_output = self.encoder(image)

@@ -25,6 +25,8 @@ def main():
     logger = get_logger(config["data"]["path_to_log_file"])
     config["data"]["path_to_checkpoint"] = os.path.join(config["data"]["path_to_output_folder"],
                                                         config["data"]["model_file_name"])
+    config["data"]["path_to_best_model"] = os.path.join(config["data"]["path_to_output_folder"],
+                                                        "best-val-model.pt")
     checkpoint = os.path.isfile(config["data"]["path_to_checkpoint"])
 
     init_random_seed()
@@ -32,7 +34,8 @@ def main():
     # defining the transform to be applied
     transforms = T.Compose([
         T.Resize((288, 288)),
-        T.ToTensor()
+        T.ToTensor(),
+        T.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
     ])
 
     if not checkpoint:
@@ -80,6 +83,7 @@ def main():
     encoder = Encoder()
     encoder.fine_tune(fine_tune=config["model"]["fine_tune_encoder"])
     decoder = DecoderWithAttention(embed_dim, word2idx, decoder_dim)
+    # decoder = DecoderWithSimpleAttention(embed_dim, word2idx, decoder_dim)
     decoder.load_pretrained_embeddings(glove, True)
     model = Seq2Seq(encoder, decoder).to(device)
 
@@ -90,10 +94,10 @@ def main():
 
     pad_idx = data.vocab.word2idx["<pad>"]
     learning_rate = config["model"]["learning_rate"]
-    momentum = config["model"]["momentum"]
-    # optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-    optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate, momentum=momentum, nesterov=True)
-    scheduler = torch.optim.lr_scheduler.CyclicLR(optimizer, base_lr=0.01, max_lr=0.1)
+    # momentum = config["model"]["momentum"]
+    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
+    # optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate, momentum=momentum, nesterov=True)
+    # scheduler = torch.optim.lr_scheduler.CyclicLR(optimizer, base_lr=0.01, max_lr=0.1)
     criterion = nn.CrossEntropyLoss(ignore_index=pad_idx)
 
     if not checkpoint:
@@ -104,20 +108,20 @@ def main():
         checkpoint = torch.load(config["data"]["path_to_checkpoint"])
         model.load_state_dict(checkpoint["model_state_dict"])
         optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
-        epoch = checkpoint["epoch"]
+        start_epoch = checkpoint["epoch"]
         train_history = checkpoint["train_history"]
         valid_history = checkpoint["valid_history"]
         best_valid_loss = checkpoint["best_valid_loss"]
     else:
-        epoch = -1
+        start_epoch = -1
         train_history = []
         valid_history = []
         best_valid_loss = float('inf')
 
-    for epoch in range(epoch+1, config["model"]["n_epochs"]):
+    for epoch in range(start_epoch+1, config["model"]["n_epochs"]):
         start_time = time.time()
 
-        train_loss = train(model, train_loader, optimizer, scheduler, criterion, config["model"]["clip"])
+        train_loss = train(model, train_loader, optimizer, criterion, config["model"]["clip"])
         valid_loss = evaluate(model, test_loader, criterion)
 
         end_time = time.time()
@@ -126,7 +130,7 @@ def main():
 
         if valid_loss < best_valid_loss:
             best_valid_loss = valid_loss
-            torch.save(model.state_dict(), "best-val-model.pt")
+            torch.save(model.state_dict(), config["data"]["path_to_best_model"])
 
         torch.save({
             "epoch": epoch,
@@ -150,45 +154,35 @@ def main():
     return 0
 
 
-def train(model, iterator, optimizer, scheduler, criterion, clip):
+def train(model, iterator, optimizer, criterion, clip):
     """
     Performs one epoch's training
 
     :param model: model to train
     :param iterator: dataLoader for training data
     :param optimizer: optimizer to update weights
-    :param scheduler: learning rate scheduling
+    # :param scheduler: learning rate scheduling
     :param criterion: loss layer
     :param clip: max norm of the gradients
     :return: average loss per epoch for training data
     """
+    vocab_size = model.decoder.vocab_size
     model.train()
-    scheduler.step()
 
     epoch_loss = 0
     for i, batch in enumerate(iterator):
 
         imgs = batch[0].to(device)
-        caps = batch[1].to(device)
+        caps = batch[1].to(device)  # (batch_size, sequence_length)
 
         optimizer.zero_grad()
 
-        output = model(imgs, caps)
+        outputs = model(imgs, caps)  # (sequence_length, batch_size, vocab_size)
+        outputs = outputs.permute((1, 0, 2))  # (batch_size, sequence_length, vocab_size)
 
-        # caps = [batch_size, sequence_length]
-
-        caps = caps.permute(1, 0)
-
-        # caps = [sequence_length, batch_size]
-        # output = [sequence_length, batch_size, vocab_size]
-
-        output = output[1:].view(-1, model.decoder.vocab_size)
-        caps = caps[1:].reshape(-1)
-
-        # caps = [(sequence_length - 1) * batch_size]
-        # output = [(sequence_length - 1) * batch size, vocab_size]
-
-        loss = criterion(output, caps)
+        # Calculate the batch loss
+        targets = caps[:, 1:]  # exclude token <start>
+        loss = criterion(outputs[:, 1:].reshape(-1, vocab_size), targets.reshape(-1))
 
         loss.backward()
 
@@ -199,7 +193,7 @@ def train(model, iterator, optimizer, scheduler, criterion, clip):
 
         epoch_loss += loss.item()
 
-    scheduler.step()
+    # scheduler.step()
 
     return epoch_loss / len(iterator)
 
@@ -213,27 +207,22 @@ def evaluate(model, iterator, criterion):
     :param criterion: loss layer
     :return: average loss per epoch for validation data
     """
+    vocab_size = model.decoder.vocab_size
     model.eval()
+    
     epoch_loss = 0
     with torch.no_grad():
         for i, batch in enumerate(iterator):
             imgs = batch[0].to(device)
             caps = batch[1].to(device)
 
-            output = model(imgs, caps, 0)  # turn off teacher forcing
+            # turn off teacher forcing
+            outputs = model(imgs, caps, teacher_forcing_ratio=0)  # (sequence_length, batch_size, vocab_size)
+            outputs = outputs.permute((1, 0, 2))  # (batch_size, sequence_length, vocab_size)
 
-            caps = caps.permute(1, 0)
-
-            # caps = [sequence_length, batch_size]
-            # output = [sequence_length, batch_size, vocab_size]
-
-            output = output[1:].view(-1, model.decoder.vocab_size)
-            caps = caps[1:].reshape(-1)
-
-            # caps = [(sequence_length - 1) * batch_size]
-            # output = [(sequence_length - 1) * batch size, vocab_size]
-
-            loss = criterion(output, caps)
+            # Calculate the batch loss
+            targets = caps[:, 1:]  # exclude token <start>
+            loss = criterion(outputs[:, 1:].reshape(-1, vocab_size), targets.reshape(-1))
 
             epoch_loss += loss.item()
 

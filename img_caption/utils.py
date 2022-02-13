@@ -1,18 +1,30 @@
 import torch
 import random
 import numpy as np
+from torch.nn.utils.rnn import pad_sequence
+
+
+# def collate_fn(batch):
+#     pad_idx = 0
+#     max_len = max([len(elem["caption"]) for elem in batch])
+#     pad_captions = torch.stack([
+#         torch.cat((elem["caption"], torch.LongTensor([pad_idx] * (max_len - len(elem["caption"])))))
+#         for elem in batch
+#     ])
+#     enc_img = torch.stack([elem["image"] for elem in batch])
+#
+#     return enc_img, pad_captions
 
 
 def collate_fn(batch):
     pad_idx = 0
-    max_len = max([len(elem["caption"]) for elem in batch])
-    pad_captions = torch.stack([
-        torch.cat((elem["caption"], torch.LongTensor([pad_idx] * (max_len - len(elem["caption"])))))
-        for elem in batch
-    ])
-    enc_img = torch.stack([elem["image"] for elem in batch])
+    imgs = [item["image"].unsqueeze(0) for item in batch]
+    imgs = torch.cat(imgs, dim=0)
 
-    return enc_img, pad_captions
+    captions = [item["caption"] for item in batch]
+    captions = pad_sequence(captions, batch_first=True, padding_value=pad_idx)
+
+    return imgs, captions
 
 
 def init_random_seed(value=42):

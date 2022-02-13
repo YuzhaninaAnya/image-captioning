@@ -1,6 +1,8 @@
 import os
 import yaml
 import pathlib
+# path = os.path.dirname(os.path.realpath(__file__))
+# path = pathlib.Path().resolve().parent.absolute()
 path = pathlib.Path().resolve()
 
 
